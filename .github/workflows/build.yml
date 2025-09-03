@@ -10,38 +10,49 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        build_type: [Release]
+        build_type: [Debug, Release]
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install CMake 3.15
+      - name: Install CMake 3.15 on Linux/macOS
         if: runner.os != 'Windows'
         uses: lukka/get-cmake@v3
         with:
           version: 3.15.0
 
-      - name: Install dependencies (Linux/macOS)
+      - name: Install dependencies on Linux/macOS
         if: runner.os != 'Windows'
         run: |
           chmod +x install_deps.sh
           ./install_deps.sh
         shell: bash
 
-      - name: Install dependencies (Windows)
+      - name: Install dependencies on Windows
         if: runner.os == 'Windows'
         run: |
-          echo "Installing dependencies on Windows..."
           choco install cmake --version=3.15.0 -y
           choco install glfw3 zeromq sqlite googletest -y
         shell: pwsh
 
-      - name: Configure CMake
+      - name: Configure CMake on Linux/macOS
+        if: runner.os != 'Windows'
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}
+        shell: bash
 
-      - name: Build
+      - name: Configure CMake on Windows
+        if: runner.os == 'Windows'
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        shell: pwsh
+
+      - name: Build on Linux/macOS
+        if: runner.os != 'Windows'
         run: cmake --build build --config ${{ matrix.build_type }}
-        shell: ${{ runner.os == 'Windows' && 'pwsh' || 'bash' }}
+        shell: bash
+
+      - name: Build on Windows
+        if: runner.os == 'Windows'
+        run: cmake --build build --config ${{ matrix.build_type }}
+        shell: pwsh
