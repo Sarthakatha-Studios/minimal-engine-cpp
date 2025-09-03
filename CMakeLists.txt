@@ -81,9 +81,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 # 6b. Set Windows executable icon
 # --------------------------
 if(WIN32)
-    set(ICON_RESOURCE "${CMAKE_CURRENT_BINARY_DIR}/sample_icon.rc")
-    file(WRITE "${ICON_RESOURCE}" "IDI_ICON1 ICON \"${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/sample.ico\"")
-    target_sources(${PROJECT_NAME} PRIVATE "${ICON_RESOURCE}")
+    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/sample.ico.rc")
 endif()
 
 # --------------------------
