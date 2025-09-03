@@ -31,11 +31,6 @@ jobs:
           echo "CC=gcc" >> $GITHUB_ENV
           echo "CXX=g++" >> $GITHUB_ENV
 
-      - name: Install dependencies
-        run: |
-          chmod +x ./install_deps.sh
-          ./install_deps.sh
-
       - name: Install system dependencies
         run: |
           sudo apt update
@@ -46,6 +41,8 @@ jobs:
             libxi-dev \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
+            libglfw-dev \
+            pkg-config \
             build-essential \
             wget \
             fuse \
