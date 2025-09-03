@@ -101,7 +101,7 @@ jobs:
         -A x64 `
         -DCMAKE_BUILD_TYPE=Release `
         -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-        -DVCPKG_TARGET_TRIPLET=x64-windows `
+        -DVCPKG_TARGET_TRIPLET=x64-windows-static `
         -DZeroMQ_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows-static/include `
         -DZeroMQ_LIBRARIES=C:/vcpkg/installed/x64-windows-static/lib/zmq.lib `
         -DGTEST_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows-static/include `
