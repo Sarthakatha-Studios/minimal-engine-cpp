@@ -124,6 +124,7 @@ jobs:
             -DVCPKG_TARGET_TRIPLET=x64-mingw-static-release \
             -DBT_USE_ZMQ=ON \
             -DBT_BUILD_TOOLS=ON \
+            -DBUILD_WITH_CONAN=OFF \
             -DZeroMQ_USE_STATIC_LIBS=ON \
             -DZMQ_STATIC=1 \
             -DGLFW_USE_STATIC=ON \
