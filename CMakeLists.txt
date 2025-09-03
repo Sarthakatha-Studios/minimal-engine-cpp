@@ -37,11 +37,8 @@ else()
 endif()
 
 # --------------------------
-# 3. Behavior-Tree
+# 3. AI Toolkit (header-only)
 # --------------------------
-set(BTREE_BUILD_EXAMPLES OFF CACHE INTERNAL "")
-set(BTREE_BUILD_TESTS OFF CACHE INTERNAL "")
-add_subdirectory(libs/Behavior-Tree EXCLUDE_FROM_ALL)
 
 # --------------------------
 # 4. Recast Navigation
@@ -66,7 +63,7 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/raylib/src
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/ode/include/ode
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/Behavior-Tree/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/aitoolkit/include/aitoolkit
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Recast/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Detour/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/assimp/include/assimp
@@ -89,10 +86,8 @@ if(APPLE)
     )
 elseif(UNIX AND NOT APPLE)
     find_package(OpenGL REQUIRED)
-    find_package(GLUT REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} GLUT::GLUT m pthread dl)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} m pthread dl)
 elseif(WIN32)
     find_package(OpenGL REQUIRED)
-    find_package(GLUT REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} GLUT::GLUT opengl32 gdi32 winmm)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} opengl32 gdi32 winmm)
 endif()

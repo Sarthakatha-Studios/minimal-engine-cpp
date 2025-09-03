@@ -1,6 +1,6 @@
 #include "raylib.h"
 #include "ode.h"
-#include "behavior_tree.h"
+#include "behtree.hpp"
 #include "Recast.h"
 #include "DetourNavMesh.h"
 #include "scene.h"

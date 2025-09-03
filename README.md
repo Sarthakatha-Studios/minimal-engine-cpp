@@ -5,8 +5,6 @@ This is a template repository, and can be forked to build custom games in ``rayl
 ## External Dependencies
 
 * [``GLFW3``](https://www.glfw.org/) for ``raylib``.
-* [``Google Tests``](https://google.github.io/googletest/) for ``BT++``.
-* [``Free OpenGL Utility Toolkit``](https://freeglut.sourceforge.net/) for ``BT++``.
 
 Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project, or if you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
@@ -15,7 +13,7 @@ Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS
 * [``raylib``](https://www.raylib.com/) for graphics rendering.
 * [``Open Dynamics Engine``](https://www.ode.org/) for physics.
 * [``assimp``](https://www.assimp.org/) for asset import from [Blender](https://www.blender.org/).
-* [``BT++``](https://github.com/miccol/Behavior-Tree/tree/master) for behavior tree logic.
+* [``AI Toolkit``](https://github.com/linkdd/aitoolkit/tree/main) for AI behavior tree and finite state machine logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
 Requires ``cmake>=3.16`` to build the project. It has been tested on CMake version 3.22.1 successfully. We used ``gcc`` (not ``clang``) as our C++ compiler.

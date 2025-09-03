@@ -2,8 +2,7 @@
 set -e
 
 echo "=============================================="
-echo "   Installing dependencies for Bloodvalley    "
-echo "   (GLFW, GLUT, GTest)                        "
+echo "   Installing dependencies                    "
 echo "=============================================="
 echo ""
 
@@ -15,48 +14,16 @@ install_linux_debian() {
     # Update package list
     sudo apt update
     
-    # Install dependencies including OpenGL headers that GLFW and GLUT need
+    # Install essential build dependencies
     sudo apt install -y \
         build-essential \
         cmake \
         pkg-config \
         libglfw3-dev \
-        freeglut3-dev \
-        libgtest-dev \
         libgl1-mesa-dev \
         libglu1-mesa-dev
-    
-    # Build GoogleTest from source safely
-    echo "Building GoogleTest from source..."
-    
-    # Find the GoogleTest source directory
-    GTEST_SRC=""
-    if [ -d "/usr/src/googletest/googletest" ]; then
-        GTEST_SRC="/usr/src/googletest/googletest"
-    elif [ -d "/usr/src/gtest" ]; then
-        GTEST_SRC="/usr/src/gtest"
-    else
-        echo "Warning: GoogleTest source not found. You may need to build it manually."
-        echo "Try: sudo apt install googletest"
-        return 0
-    fi
-    
-    TMP_GTEST=$(mktemp -d)
-    trap "rm -rf $TMP_GTEST" EXIT  # Ensure cleanup on exit
-    
-    pushd "$TMP_GTEST" > /dev/null
-    cmake "$GTEST_SRC"
-    make -j$(nproc)
-    
-    # Find and copy the built libraries
-    if find . -name "*.a" -type f | grep -q .; then
-        sudo find . -name "*.a" -type f -exec cp {} /usr/lib \;
-        echo "GoogleTest installed successfully!"
-    else
-        echo "Warning: No GoogleTest libraries found after build"
-    fi
-    
-    popd > /dev/null
+
+    echo "Dependencies installed successfully!"
 }
 
 check_dependencies() {
@@ -65,14 +32,7 @@ check_dependencies() {
     
     local missing=()
     
-    # Check for pkg-config files
     pkg-config --exists glfw3 || missing+=("GLFW")
-    pkg-config --exists glut || missing+=("GLUT")
-    
-    # Check for GTest
-    if ! [ -f /usr/lib/libgtest.a ] && ! [ -f /usr/lib/x86_64-linux-gnu/libgtest.a ]; then
-        missing+=("GoogleTest")
-    fi
     
     if [ ${#missing[@]} -eq 0 ]; then
         echo "✓ All dependencies verified!"
@@ -89,11 +49,11 @@ case "$OS" in
             check_dependencies
         elif [ -f /etc/redhat-release ]; then
             echo "Red Hat/Fedora detected. Install dependencies with:"
-            echo "  sudo dnf install glfw-devel freeglut-devel gtest-devel"
+            echo "  sudo dnf install glfw-devel mesa-libGL-devel mesa-libGLU-devel"
             exit 1
         elif [ -f /etc/arch-release ]; then
             echo "Arch Linux detected. Install dependencies with:"
-            echo "  sudo pacman -S glfw freeglut gtest"
+            echo "  sudo pacman -S glfw mesa"
             exit 1
         else
             echo "Unsupported Linux distribution. Install deps manually."
@@ -102,7 +62,7 @@ case "$OS" in
         ;;
     Darwin*)
         echo "macOS detected. Install dependencies with Homebrew:"
-        echo "  brew install glfw freeglut googletest"
+        echo "  brew install glfw"
         exit 1
         ;;
     *)
@@ -115,4 +75,3 @@ echo ""
 echo "=============================================="
 echo " All dependencies installed successfully!     "
 echo "=============================================="
-
