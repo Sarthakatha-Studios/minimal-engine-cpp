@@ -69,19 +69,19 @@ jobs:
           sudo apt-get install -y imagemagick
           convert assets/icons/sample.ico -resize 256x256 MinimalEngine.AppDir/minimal-engine.png
           cat > MinimalEngine.AppDir/minimal-engine.desktop <<EOL
-[Desktop Entry]
-Name=Minimal Engine
-Exec=minimal-engine
-Icon=minimal-engine
-Type=Application
-Categories=Utility;
-EOL
+          [Desktop Entry]
+          Name=Minimal Engine
+          Exec=minimal-engine
+          Icon=minimal-engine
+          Type=Application
+          Categories=Utility;
+          EOL
           cat > MinimalEngine.AppDir/AppRun << 'EOF'
-#!/bin/bash
-HERE="$(dirname "$(readlink -f "${0}")")"
-export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
-exec "${HERE}/minimal-engine" "$@"
-EOF
+          #!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
+          exec "${HERE}/minimal-engine" "$@"
+          EOF
           chmod +x MinimalEngine.AppDir/AppRun
 
       - name: Build AppImage
