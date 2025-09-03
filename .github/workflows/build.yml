@@ -89,7 +89,7 @@ jobs:
           wget -O appimagetool.AppImage https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
           chmod +x appimagetool.AppImage
           ./appimagetool.AppImage MinimalEngine.AppDir
-          mv MinimalEngine-x86_64.AppImage Minimal_Engine-x86_64.AppImage
+          mv MinimalEngine.AppDir-x86_64.AppImage Minimal_Engine-x86_64.AppImage
 
       - name: Upload Linux AppImage
         uses: actions/upload-artifact@v4
