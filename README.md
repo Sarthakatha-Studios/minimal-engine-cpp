@@ -17,13 +17,7 @@ sudo apt install -y \
             libxi-dev \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
-            libglfw-dev \
-            pkg-config \
-            build-essential \
-            wget \
-            fuse \
-            libfuse2 \
-            patchelf
+            libglfw3-dev
 ```
 
 If you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
