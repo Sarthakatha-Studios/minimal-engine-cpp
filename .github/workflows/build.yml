@@ -14,7 +14,7 @@ env:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    name: Linux - gcc - Release
+    name: Linux - gcc - Release (AppImage)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,7 +46,11 @@ jobs:
             libxi-dev \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
-            build-essential
+            build-essential \
+            wget \
+            fuse \
+            libfuse2 \
+            patchelf
 
       - name: Configure CMake
         run: |
@@ -59,17 +63,25 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
 
-      - name: Copy assets
+      - name: Prepare AppDir
         run: |
-          cp -r assets build/assets
+          mkdir -p MinimalEngine.AppDir
+          cp build/minimal-engine MinimalEngine.AppDir/
+          cp -r assets MinimalEngine.AppDir/
+          cp AppRun MinimalEngine.AppDir/
+          cp minimal-engine.desktop MinimalEngine.AppDir/
 
-      - name: Upload Linux artifact
+      - name: Build AppImage
+        run: |
+          wget -O appimagetool.AppImage https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool.AppImage
+          ./appimagetool.AppImage MinimalEngine.AppDir
+
+      - name: Upload Linux AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: Minimal-Engine-CPP-linux
-          path: |
-            build/minimal-engine
-            build/assets
+          name: Minimal-Engine-CPP-linux-AppImage
+          path: MinimalEngine-x86_64.AppImage
           retention-days: 7
 
   build-windows-cross:
