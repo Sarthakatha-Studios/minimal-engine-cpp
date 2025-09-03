@@ -4,7 +4,7 @@ This is a template repository, and can be forked to build custom games in ``rayl
 
 ## External Dependencies
 
-* [``GLFW3``](https://www.glfw.org/) for ``raylib``.
+* [``GLFW3``](https://www.glfw.org/) and its dependencies for ``raylib``.
 
 Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project, or if you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
