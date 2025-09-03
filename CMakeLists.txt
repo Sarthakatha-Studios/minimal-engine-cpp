@@ -4,6 +4,12 @@ project(minimal-engine LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Prefer modern OpenGL (GLVND) to avoid warnings
+if (POLICY CMP0072)
+    cmake_policy(SET CMP0072 NEW)
+endif()
+set(OpenGL_GL_PREFERENCE GLVND)
+
 if(WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
@@ -37,17 +43,13 @@ else()
 endif()
 
 # --------------------------
-# 3. Behavior-Tree
+# 3. Behavior-Tree (Header-only)
 # --------------------------
 set(BTREE_BUILD_EXAMPLES OFF CACHE INTERNAL "")
 set(BTREE_BUILD_TESTS OFF CACHE INTERNAL "")
 add_subdirectory(libs/Behavior-Tree EXCLUDE_FROM_ALL)
 
-if (TARGET BehaviorTree)
-    set(BTREE_LIB BehaviorTree)
-else()
-    message(FATAL_ERROR "Could not find Behavior-Tree library target. Check Behavior-Tree's CMakeLists.")
-endif()
+# Behavior-Tree is treated as header-only, so no linking needed
 
 # --------------------------
 # 4. Recast Navigation
@@ -81,7 +83,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     raylib
     ${ODE_LIB}
-    ${BTREE_LIB}
     Recast
     Detour
     assimp
