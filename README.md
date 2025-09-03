@@ -1,5 +1,7 @@
 # A Minimal Game Engine in C++
 
+This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches.
+
 ## External Dependencies
 
 * [GLFW3](https://www.glfw.org/) for ``raylib``.
@@ -17,4 +19,6 @@ Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS
 * [``BehaviorTree.CPP``](https://www.behaviortree.dev/) for behavior tree logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
-Requires ``cmake>=3.16`` to build the project. The workflow has been tested on CMake version 3.22.1 successfully. We used ``gcc`` (not ``clang``) as our C++ compiler.
+Requires ``cmake>=3.16`` to build the project. It has been tested on CMake version 3.22.1 successfully. We used ``gcc`` (not ``clang``) as our C++ compiler.
+
+**Note.** A GitHub Actions workflow has been set up to compile binaries for Linux and Windows (both on Ubuntu, uses ``mingw-w64`` for Windows compilation).
