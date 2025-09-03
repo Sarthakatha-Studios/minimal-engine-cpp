@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.16)
 project(minimal-engine LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
