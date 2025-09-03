@@ -7,7 +7,7 @@
 * SQLite 3
 * ZeroMQ
 
-Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project.
+Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project, or if you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
 ## Libraries Used
 
