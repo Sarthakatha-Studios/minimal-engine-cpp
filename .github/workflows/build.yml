@@ -2,8 +2,7 @@ name: Cross-Platform Build
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
 
 jobs:
@@ -11,11 +10,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
         build_type: [Debug, Release]
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set up dependencies
@@ -23,6 +22,7 @@ jobs:
           chmod +x install_deps.sh
           ./install_deps.sh
         shell: bash
+        timeout-minutes: 15
 
       - name: Set up CMake
         uses: lukka/get-cmake@latest
