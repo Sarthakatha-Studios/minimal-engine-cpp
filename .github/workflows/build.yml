@@ -65,8 +65,14 @@ jobs:
           mkdir -p MinimalEngine.AppDir
           cp build/minimal-engine MinimalEngine.AppDir/
           cp -r assets MinimalEngine.AppDir/
-          cp AppRun MinimalEngine.AppDir/
           cp minimal-engine.desktop MinimalEngine.AppDir/
+          cat > MinimalEngine.AppDir/AppRun << 'EOF'
+          #!/bin/bash
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
+          exec "${HERE}/minimal-engine" "$@"
+          EOF
+          chmod +x MinimalEngine.AppDir/AppRun
 
       - name: Build AppImage
         run: |
