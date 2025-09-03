@@ -1,13 +1,13 @@
 # A Minimal Game Engine in C++
 
-This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches.
+This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396).
 
 ## External Dependencies
 
-* [GLFW3](https://www.glfw.org/) for ``raylib``.
-* [Google Tests](https://google.github.io/googletest/) for ``BehaviorTree.CPP``.
-* [SQLite 3](https://sqlite.org/) for ``BehaviorTree.CPP``.
-* [ZeroMQ](https://zeromq.org/) for ``BehaviorTree.CPP``.
+* [``GLFW3``](https://www.glfw.org/) for ``raylib``.
+* [``Google Tests``](https://google.github.io/googletest/) for ``BehaviorTree.CPP``.
+* [``SQLite 3``](https://sqlite.org/) for ``BehaviorTree.CPP``.
+* [``ZeroMQ``](https://zeromq.org/) for ``BehaviorTree.CPP``.
 
 Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project, or if you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
