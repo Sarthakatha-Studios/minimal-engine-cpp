@@ -4,12 +4,6 @@ project(minimal-engine LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Prefer modern OpenGL (GLVND) to avoid warnings
-if (POLICY CMP0072)
-    cmake_policy(SET CMP0072 NEW)
-endif()
-set(OpenGL_GL_PREFERENCE GLVND)
-
 if(WIN32)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
@@ -43,13 +37,11 @@ else()
 endif()
 
 # --------------------------
-# 3. Behavior-Tree (Header-only)
+# 3. Behavior-Tree
 # --------------------------
 set(BTREE_BUILD_EXAMPLES OFF CACHE INTERNAL "")
 set(BTREE_BUILD_TESTS OFF CACHE INTERNAL "")
 add_subdirectory(libs/Behavior-Tree EXCLUDE_FROM_ALL)
-
-# Behavior-Tree is treated as header-only, so no linking needed
 
 # --------------------------
 # 4. Recast Navigation
@@ -92,10 +84,15 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 # 7. Platform-specific linking
 # --------------------------
 if(APPLE)
-    target_link_libraries(${PROJECT_NAME} PRIVATE "-framework OpenGL" "-framework Cocoa" "-framework IOKit" "-framework CoreVideo")
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+        "-framework OpenGL" "-framework Cocoa" "-framework IOKit" "-framework CoreVideo"
+    )
 elseif(UNIX AND NOT APPLE)
     find_package(OpenGL REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} m pthread dl)
+    find_package(GLUT REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} GLUT::GLUT m pthread dl)
 elseif(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 gdi32 winmm)
+    find_package(OpenGL REQUIRED)
+    find_package(GLUT REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENGL_gl_LIBRARY} GLUT::GLUT opengl32 gdi32 winmm)
 endif()
