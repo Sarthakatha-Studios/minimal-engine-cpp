@@ -31,7 +31,7 @@ jobs:
           echo "CC=gcc" >> $GITHUB_ENV
           echo "CXX=g++" >> $GITHUB_ENV
 
-      - name: Install dependencies
+      - name: Install project dependencies
         run: |
           chmod +x ./install_deps.sh
           ./install_deps.sh
@@ -39,7 +39,8 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y libxinerama-dev libxcursor-dev libxrandr-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev
+          sudo apt install -y libxinerama-dev libxcursor-dev libxrandr-dev libxi-dev \
+                              libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
 
       - name: Configure CMake
         run: |
@@ -60,8 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Minimal-Engine-CPP-linux-gcc
-          path: |
-            build/minimal-engine
+          path: build/minimal-engine
           retention-days: 7
 
   build-windows-cross:
@@ -98,23 +98,11 @@ jobs:
           set(VCPKG_CMAKE_SYSTEM_NAME MinGW)
           EOL
 
-      # Patch Windows.h capitalization issue for MinGW
-      - name: Patch Windows.h case for MinGW
-        run: |
-          sed -i 's|#include <Windows.h>|#include <windows.h>|g' \
-            libs/BehaviorTree.CPP/src/shared_library_WIN.cpp
-
-      # Disable Conan forcibly inside BehaviorTree.CPP
-      - name: Patch BehaviorTree.CPP to disable Conan
-        run: |
-          sed -i '/find_package *(conan/d' libs/BehaviorTree.CPP/CMakeLists.txt
-
       - name: Install dependencies via vcpkg (Static triplet)
         run: |
           ./vcpkg/vcpkg install \
             glfw3:x64-mingw-static-release \
-            zeromq:x64-mingw-static-release \
-            sqlite3:x64-mingw-static-release \
+            freeglut:x64-mingw-static-release \
             gtest:x64-mingw-static-release
 
       - name: Configure CMake for static cross-compilation
