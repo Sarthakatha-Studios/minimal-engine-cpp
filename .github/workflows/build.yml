@@ -97,34 +97,38 @@ jobs:
       - name: Install dependencies via vcpkg (Windows triplet)
         run: |
           ./vcpkg/vcpkg install \
-            glfw3:x64-mingw-static \
-            zeromq:x64-mingw-static \
-            sqlite3:x64-mingw-static \
-            gtest:x64-mingw-static
+            glfw3:x64-mingw-dynamic \
+            zeromq:x64-mingw-dynamic \
+            sqlite3:x64-mingw-dynamic \
+            gtest:x64-mingw-dynamic
 
       - name: Configure CMake for cross-compilation
         run: |
           cmake -B build-windows \
-          -G Ninja \
-          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
-          -DCMAKE_SYSTEM_NAME=Windows \
-          -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
-          -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
-          -DVCPKG_TARGET_TRIPLET=x64-mingw-static \
-          -DBT_USE_ZMQ=ON \
-          -DBT_BUILD_TOOLS=ON \
-          -DCMAKE_EXE_LINKER_FLAGS="-static" \
-          -DCMAKE_SHARED_LINKER_FLAGS="-static"
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
+            -DCMAKE_SYSTEM_NAME=Windows \
+            -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
+            -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
+            -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+            -DVCPKG_TARGET_TRIPLET=x64-mingw-dynamic \
+            -DBT_USE_ZMQ=ON \
+            -DBT_BUILD_TOOLS=ON
 
       - name: Build Windows binaries
         run: cmake --build build-windows --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
+
+      - name: Copy DLLs into artifact folder
+        run: |
+          mkdir -p build-windows/artifacts
+          cp build-windows/minimal-engine.exe build-windows/artifacts/
+          cp build-windows/*.dll build-windows/artifacts/ || true
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Minimal-Engine-CPP-windows-x64
-          path: build-windows/minimal-engine.exe
+          path: build-windows/artifacts
           retention-days: 7
 
   create-release:
