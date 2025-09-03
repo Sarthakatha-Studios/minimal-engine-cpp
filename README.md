@@ -1,12 +1,32 @@
 # A Minimal Game Engine in C++20
 
-This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396). You only need to ship your ``assets`` directory along with the builds, no other dependecies required.
+This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396). For the Windows build, you need to ship your ``assets`` directory along with the builds. For Linux, this isn't required.
 
 ## External Dependencies
 
 * [``GLFW3``](https://www.glfw.org/) and its dependencies for ``raylib``.
 
-Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project, or if you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
+Use the following command in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project:
+
+```bash
+sudo apt update
+sudo apt install -y \
+            libxinerama-dev \
+            libxcursor-dev \
+            libxrandr-dev \
+            libxi-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev \
+            libglfw-dev \
+            pkg-config \
+            build-essential \
+            wget \
+            fuse \
+            libfuse2 \
+            patchelf
+```
+
+If you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
 ## Libraries Used
 
