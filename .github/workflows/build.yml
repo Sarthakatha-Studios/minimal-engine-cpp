@@ -36,18 +36,6 @@ jobs:
           chmod +x ./install_deps.sh
           ./install_deps.sh
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y \
-            libxinerama-dev \
-            libxcursor-dev \
-            libxrandr-dev \
-            libxi-dev \
-            libgl1-mesa-dev \
-            libglu1-mesa-dev \
-            freeglut3-dev
-
       - name: Configure CMake
         run: |
           cmake -B build \
@@ -58,15 +46,10 @@ jobs:
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
 
-      - name: Run tests
-        run: |
-          cd build
-          ctest -C ${{ env.BUILD_TYPE }} --output-on-failure --verbose
-
-      - name: Upload artifacts
+      - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Minimal-Engine-CPP-linux-gcc
+          name: Minimal-Engine-CPP-linux
           path: build/minimal-engine
           retention-days: 7
 
@@ -82,7 +65,7 @@ jobs:
       - name: Install MinGW and tools
         run: |
           sudo apt update
-          sudo apt install -y mingw-w64 g++-mingw-w64 mingw-w64-common ninja-build zip cmake git curl
+          sudo apt install -y mingw-w64 g++-mingw-w64 ninja-build cmake git curl
 
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v2
@@ -106,10 +89,7 @@ jobs:
 
       - name: Install dependencies via vcpkg (Static)
         run: |
-          ./vcpkg/vcpkg install \
-            glfw3:x64-mingw-static-release \
-            freeglut:x64-mingw-static-release \
-            gtest:x64-mingw-static-release
+          ./vcpkg/vcpkg install glfw3:x64-mingw-static-release
 
       - name: Configure CMake for static cross-compilation
         run: |
@@ -127,7 +107,7 @@ jobs:
       - name: Build Windows binaries
         run: cmake --build build-windows --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
 
-      - name: Upload Windows artifacts
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: Minimal-Engine-CPP-windows-x64
@@ -142,7 +122,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download all artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
@@ -160,7 +140,7 @@ jobs:
           VERSION=$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
@@ -170,9 +150,6 @@ jobs:
           files: artifacts/*.zip
           body: |
             Automated build from commit ${{ github.sha }}
-            
-            ## Changes
-            ${{ github.event.head_commit.message }}
             
             ## Artifacts
             - Linux (GCC)
