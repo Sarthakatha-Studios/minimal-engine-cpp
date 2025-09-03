@@ -92,7 +92,7 @@ jobs:
 
     - name: Install dependencies with vcpkg
       run: |
-        vcpkg install glfw3:x64-windows zeromq:x64-windows sqlite3:x64-windows gtest:x64-windows
+        vcpkg install glfw3:x64-windows-static zeromq:x64-windows-static sqlite3:x64-windows-static gtest:x64-windows-static
 
     - name: Configure CMake
       run: |
@@ -102,12 +102,12 @@ jobs:
         -DCMAKE_BUILD_TYPE=Release `
         -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
         -DVCPKG_TARGET_TRIPLET=x64-windows `
-        -DZeroMQ_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
-        -DZeroMQ_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/zmq.lib `
-        -DGTEST_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
-        -DGTEST_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/gtest.lib `
-        -DSQLITE3_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
-        -DSQLITE3_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/sqlite3.lib
+        -DZeroMQ_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows-static/include `
+        -DZeroMQ_LIBRARIES=C:/vcpkg/installed/x64-windows-static/lib/zmq.lib `
+        -DGTEST_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows-static/include `
+        -DGTEST_LIBRARIES=C:/vcpkg/installed/x64-windows-static/lib/gtest.lib `
+        -DSQLITE3_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows-static/include `
+        -DSQLITE3_LIBRARIES=C:/vcpkg/installed/x64-windows-static/lib/sqlite3.lib
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
