@@ -93,10 +93,10 @@ jobs:
     - name: Install dependencies via vcpkg (Windows triplet)
       run: |
         ./vcpkg/vcpkg install \
-          glfw3:x64-windows-static \
-          zeromq:x64-windows-static \
-          sqlite3:x64-windows-static \
-          gtest:x64-windows-static
+          glfw3:x64-mingw-static \
+          zeromq:x64-mingw-static \
+          sqlite3:x64-mingw-static \
+          gtest:x64-mingw-static
 
     - name: Configure CMake for cross-compilation
       run: |
@@ -107,7 +107,7 @@ jobs:
           -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
           -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
-          -DVCPKG_TARGET_TRIPLET=x64-windows-static \
+          -DVCPKG_TARGET_TRIPLET=x64-mingw-static \
           -DBTCPP_ZMQ_STUFF=OFF
 
     - name: Build Windows binaries
