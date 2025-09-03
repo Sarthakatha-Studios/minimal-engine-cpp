@@ -36,6 +36,17 @@ jobs:
           chmod +x ./install_deps.sh
           ./install_deps.sh
 
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            libxinerama-dev \
+            libxcursor-dev \
+            libxrandr-dev \
+            libxi-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev
+
       - name: Configure CMake
         run: |
           cmake -B build \
