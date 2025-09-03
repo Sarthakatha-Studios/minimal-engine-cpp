@@ -5,7 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # Allow manual triggers
+  workflow_dispatch:
 
 env:
   CMAKE_VERSION: 3.22.1
@@ -14,60 +14,47 @@ env:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        compiler: [gcc, clang]
-        build_type: [Debug, Release]
-    
-    name: Linux - ${{ matrix.compiler }} - ${{ matrix.build_type }}
-    
+    name: Linux - gcc - Release
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
-    
+
     - name: Setup CMake
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: ${{ env.CMAKE_VERSION }}
-    
-    - name: Setup compiler
+
+    - name: Setup GCC
       run: |
-        if [ "${{ matrix.compiler }}" = "clang" ]; then
-          sudo apt update
-          sudo apt install -y clang
-          echo "CC=clang" >> $GITHUB_ENV
-          echo "CXX=clang++" >> $GITHUB_ENV
-        else
-          echo "CC=gcc" >> $GITHUB_ENV
-          echo "CXX=g++" >> $GITHUB_ENV
-        fi
-    
+        echo "CC=gcc" >> $GITHUB_ENV
+        echo "CXX=g++" >> $GITHUB_ENV
+
     - name: Install dependencies
       run: |
         chmod +x ./install_deps.sh
         ./install_deps.sh
-    
+
     - name: Configure CMake
       run: |
         cmake -B build \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
           -DCMAKE_C_COMPILER=${{ env.CC }} \
           -DCMAKE_CXX_COMPILER=${{ env.CXX }}
-    
+
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel $(nproc)
-    
+      run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
+
     - name: Run tests
       run: |
         cd build
-        ctest -C ${{ matrix.build_type }} --output-on-failure --verbose
-    
+        ctest -C ${{ env.BUILD_TYPE }} --output-on-failure --verbose
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Minimal-Engine-CPP-${{ matrix.compiler }}-${{ matrix.build_type }}
+        name: Minimal-Engine-CPP-linux-gcc
         path: |
           build/Minimal-Engine-CPP*
           build/bin/
@@ -76,142 +63,88 @@ jobs:
 
   build-windows:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        arch: [x64, Win32]
-        build_type: [Debug, Release]
-    
-    name: Windows - ${{ matrix.arch }} - ${{ matrix.build_type }}
-    
+    name: Windows - x64 - Release
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
-    
+
     - name: Setup CMake
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: ${{ env.CMAKE_VERSION }}
-    
+
     - name: Cache vcpkg packages
       uses: actions/cache@v4
       with:
         path: |
           C:/vcpkg/installed
           C:/vcpkg/packages
-        key: ${{ runner.os }}-vcpkg-${{ matrix.arch }}-${{ hashFiles('**/vcpkg.json') }}
+        key: ${{ runner.os }}-vcpkg-x64-${{ hashFiles('**/vcpkg.json') }}
         restore-keys: |
-          ${{ runner.os }}-vcpkg-${{ matrix.arch }}-
-    
+          ${{ runner.os }}-vcpkg-x64-
+
     - name: Install dependencies with vcpkg
       run: |
-        vcpkg install glfw3:${{ matrix.arch }}-windows
-        vcpkg install zeromq:${{ matrix.arch }}-windows
-        vcpkg install sqlite3:${{ matrix.arch }}-windows
-        vcpkg install gtest:${{ matrix.arch }}-windows
+        vcpkg install glfw3:x64-windows
+        vcpkg install zeromq:x64-windows
+        vcpkg install sqlite3:x64-windows
+        vcpkg install gtest:x64-windows
         vcpkg integrate install
-    
+
     - name: Configure CMake
       run: |
         cmake -B build `
           -G "Visual Studio 17 2022" `
-          -A ${{ matrix.arch }} `
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} `
+          -A x64 `
+          -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
-    
-    - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel
-    
-    - name: Run tests
-      run: |
-        cd build
-        ctest -C ${{ matrix.build_type }} --output-on-failure --verbose
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: Minimal-Engine-CPP-windows-${{ matrix.arch }}-${{ matrix.build_type }}
-        path: |
-          build/${{ matrix.build_type }}/
-          build/bin/
-          build/lib/
-        retention-days: 7
 
-  build-macos:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        build_type: [Debug, Release]
-    
-    name: macOS - ${{ matrix.build_type }}
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
-    
-    - name: Setup CMake
-      uses: jwlawson/actions-setup-cmake@v2
-      with:
-        cmake-version: ${{ env.CMAKE_VERSION }}
-    
-    - name: Install dependencies
-      run: |
-        brew install glfw zeromq sqlite googletest pkg-config
-    
-    - name: Configure CMake
-      run: |
-        cmake -B build \
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-          -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
-    
     - name: Build
-      run: cmake --build build --config ${{ matrix.build_type }} --parallel $(sysctl -n hw.ncpu)
-    
+      run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
+
     - name: Run tests
       run: |
         cd build
-        ctest -C ${{ matrix.build_type }} --output-on-failure --verbose
-    
+        ctest -C ${{ env.BUILD_TYPE }} --output-on-failure --verbose
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Minimal-Engine-CPP-macos-${{ matrix.build_type }}
+        name: Minimal-Engine-CPP-windows-x64
         path: |
-          build/Minimal-Engine-CPP*
+          build/${{ env.BUILD_TYPE }}/
           build/bin/
           build/lib/
         retention-days: 7
 
   create-release:
-    needs: [build-linux, build-windows, build-macos]
+    needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    
+
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
         path: artifacts/
-    
+
     - name: Create release archive
       run: |
         cd artifacts
         for dir in */; do
           zip -r "${dir%/}.zip" "$dir"
         done
-    
+
     - name: Get version
       id: get_version
       run: |
         VERSION=$(date +'%Y.%m.%d')-$(git rev-parse --short HEAD)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-    
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
@@ -227,6 +160,5 @@ jobs:
           ${{ github.event.head_commit.message }}
           
           ## Artifacts
-          - Linux (GCC/Clang)
-          - Windows (x64/Win32)
-          - macOS (Universal Binary)
+          - Linux (GCC)
+          - Windows x64
