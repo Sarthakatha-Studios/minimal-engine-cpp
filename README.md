@@ -1,6 +1,6 @@
 # A Minimal Game Engine in C++20
 
-This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396). The libraries are linked statically, so you only need to provide your ``assets`` directory with the builds.
+This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396). You only need to ship your ``assets`` directory along with the builds, no other dependecies required.
 
 ## External Dependencies
 
