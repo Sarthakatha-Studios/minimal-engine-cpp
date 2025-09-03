@@ -32,4 +32,4 @@ If you are on Windows/Mac/BSD or any other Linux flavour, install these dependen
 
 Requires ``cmake>=3.16`` to build the project. It has been tested on CMake version 3.22.1 successfully. We used ``g++`` (not ``clang``) as our C++ compiler.
 
-**Note.** A GitHub Actions workflow has been set up to compile binaries for Linux and Windows (both on Ubuntu, uses ``mingw-w64`` for Windows compilation).
+**Note.** A GitHub Actions workflow has been set up to compile binaries for Linux and Windows (both on Ubuntu 24.04LTS, uses ``mingw-w64`` for Windows compilation).
