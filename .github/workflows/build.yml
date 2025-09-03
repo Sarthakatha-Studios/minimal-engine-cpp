@@ -15,7 +15,7 @@ jobs:
       - name: Install build dependencies for CMake
         run: |
           sudo apt update
-          sudo apt install -y build-essential libssl-dev
+          sudo apt install -y build-essential libssl-dev wget
         shell: bash
 
       - name: Build and install CMake 3.22.1 from source
@@ -48,13 +48,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies on Windows
+      - name: Install vcpkg
         run: |
-          choco install glfw3 zeromq sqlite googletest -y
+          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+          C:\vcpkg\bootstrap-vcpkg.bat
         shell: pwsh
 
-      - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Install dependencies via vcpkg
+        run: |
+          C:\vcpkg\vcpkg.exe install glfw3:x64-windows zeromq:x64-windows sqlite3:x64-windows gtest:x64-windows
+        shell: pwsh
+
+      - name: Configure CMake with vcpkg toolchain
+        run: |
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_BUILD_TYPE=Release
         shell: pwsh
 
       - name: Build
