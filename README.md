@@ -17,4 +17,4 @@ Use ``install_deps.sh`` to install these dependencies before building the projec
 * [``BehaviorTree.CPP``](https://www.behaviortree.dev/) for behavior tree logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
-Requires ``cmake>=3.15`` to build the project.
+Requires ``cmake>=3.16`` to build the project.
