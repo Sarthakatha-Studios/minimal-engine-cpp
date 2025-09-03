@@ -41,7 +41,7 @@ jobs:
             libxi-dev \
             libgl1-mesa-dev \
             libglu1-mesa-dev \
-            libglfw-dev \
+            libglfw3-dev \
             pkg-config \
             build-essential \
             wget \
