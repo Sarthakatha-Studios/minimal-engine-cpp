@@ -13,15 +13,6 @@ install_linux_debian() {
     sudo apt update
     sudo apt install -y build-essential cmake pkg-config \
         libglfw3-dev libzmq3-dev libsqlite3-dev libgtest-dev
-
-    # Build GTest in temp folder
-    TMP_GTEST=$(mktemp -d)
-    pushd $TMP_GTEST
-    cmake /usr/src/gtest
-    make -j$(nproc)
-    sudo cp lib/*.a /usr/lib
-    popd
-    rm -rf $TMP_GTEST
 }
 
 install_macos() {
