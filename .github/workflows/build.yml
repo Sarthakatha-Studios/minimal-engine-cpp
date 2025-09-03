@@ -10,49 +10,37 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        build_type: [Release]
+        build_type: [Debug, Release]
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install CMake 3.15 on Linux/macOS
-        if: runner.os != 'Windows'
-        uses: lukka/get-cmake@v3
-        with:
-          version: 3.15.0
+      - name: Install CMake 3.15
+        run: |
+          if [ "$(uname)" == "Darwin" ]; then
+            brew install cmake@3.15
+            brew link cmake@3.15 --force
+          elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+            wget https://cmake.org/files/v3.15/cmake-3.15.0-Linux-x86_64.tar.gz
+            tar -xzvf cmake-3.15.0-Linux-x86_64.tar.gz
+            sudo cp -r cmake-3.15.0-Linux-x86_64/* /usr/local/
+          elif [ "$(expr substr $(uname -s) 1 5)" == "MINGW" ]; then
+            choco install cmake --version=3.15.0 -y
+          fi
+        shell: bash
 
-      - name: Install dependencies on Linux/macOS
-        if: runner.os != 'Windows'
+      - name: Install dependencies
         run: |
           chmod +x install_deps.sh
           ./install_deps.sh
         shell: bash
 
-      - name: Install dependencies on Windows
-        if: runner.os == 'Windows'
-        run: |
-          choco install cmake --version=3.15.0 -y
-          choco install glfw3 zeromq sqlite googletest -y
-        shell: pwsh
-
-      - name: Configure CMake on Linux/macOS
-        if: runner.os != 'Windows'
+      - name: Configure CMake
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         shell: bash
 
-      - name: Configure CMake on Windows
-        if: runner.os == 'Windows'
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        shell: pwsh
-
-      - name: Build on Linux/macOS
-        if: runner.os != 'Windows'
+      - name: Build
         run: cmake --build build --config ${{ matrix.build_type }}
         shell: bash
-
-      - name: Build on Windows
-        if: runner.os == 'Windows'
-        run: cmake --build build --config ${{ matrix.build_type }}
-        shell: pwsh
