@@ -2,10 +2,10 @@
 
 ## External Dependencies
 
-* GLFW3
-* Google Tests
-* SQLite 3
-* ZeroMQ
+* [GLFW3](https://www.glfw.org/) for ``raylib``.
+* [Google Tests](https://google.github.io/googletest/) for ``BehaviorTree.CPP``.
+* [SQLite 3](https://sqlite.org/) for ``BehaviorTree.CPP``.
+* [ZeroMQ](https://zeromq.org/) for ``BehaviorTree.CPP``.
 
 Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS, etc.) to install these dependencies before building the project, or if you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
