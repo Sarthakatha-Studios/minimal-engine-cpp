@@ -26,12 +26,23 @@ install_linux_debian() {
 
 install_macos() {
     echo "Detected macOS"
+
+    # Install Homebrew if missing
     if ! command -v brew &>/dev/null; then
         echo "Homebrew not found. Installing..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
+
     brew update
-    brew install cmake glfw zeromq sqlite googletest
+
+    # Only install packages that are missing
+    for pkg in glfw zeromq sqlite googletest; do
+        if ! brew list "$pkg" &>/dev/null; then
+            brew install "$pkg"
+        else
+            echo "$pkg already installed, skipping..."
+        fi
+    done
 }
 
 case "$OS" in
