@@ -66,7 +66,7 @@ jobs:
 
   build-windows-cross:
     runs-on: ubuntu-latest
-    name: Windows (Cross-Compiled) - x64 - Release (Full Static)
+    name: Windows (Cross-Compiled) - x64 - Release (Fully Static)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -88,7 +88,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           ./vcpkg/bootstrap-vcpkg.sh
 
-      - name: Create custom vcpkg triplet for full static build
+      - name: Create custom vcpkg triplet for fully static build
         run: |
           mkdir -p vcpkg/triplets/community
           cat > vcpkg/triplets/community/x64-mingw-static-release.cmake <<EOL
@@ -98,10 +98,16 @@ jobs:
           set(VCPKG_CMAKE_SYSTEM_NAME MinGW)
           EOL
 
+      # Patch Windows.h capitalization issue for MinGW
       - name: Patch Windows.h case for MinGW
         run: |
           sed -i 's|#include <Windows.h>|#include <windows.h>|g' \
             libs/BehaviorTree.CPP/src/shared_library_WIN.cpp
+
+      # Disable Conan forcibly inside BehaviorTree.CPP
+      - name: Patch BehaviorTree.CPP to disable Conan
+        run: |
+          sed -i '/find_package *(conan/d' libs/BehaviorTree.CPP/CMakeLists.txt
 
       - name: Install dependencies via vcpkg (Static triplet)
         run: |
@@ -109,8 +115,7 @@ jobs:
             glfw3:x64-mingw-static-release \
             zeromq:x64-mingw-static-release \
             sqlite3:x64-mingw-static-release \
-            gtest:x64-mingw-static-release \
-            cppzmq:x64-mingw-static-release
+            gtest:x64-mingw-static-release
 
       - name: Configure CMake for static cross-compilation
         run: |
@@ -122,14 +127,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
             -DVCPKG_TARGET_TRIPLET=x64-mingw-static-release \
-            -DBT_USE_ZMQ=ON \
-            -DBT_BUILD_TOOLS=ON \
-            -DBUILD_WITH_CONAN=OFF \
-            -DZeroMQ_USE_STATIC_LIBS=ON \
-            -DZMQ_STATIC=1 \
-            -DGLFW_USE_STATIC=ON \
             -DBUILD_SHARED_LIBS=OFF \
-            -DCMAKE_CXX_FLAGS="-DZMQ_STATIC -static -static-libgcc -static-libstdc++" \
             -DCMAKE_EXE_LINKER_FLAGS="-static -static-libgcc -static-libstdc++ -Wl,-Bstatic -lpthread -lwinpthread"
 
       - name: Build Windows binaries
