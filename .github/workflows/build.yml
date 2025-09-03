@@ -99,15 +99,15 @@ jobs:
         cmake -B build `
         -G "Visual Studio 17 2022" `
         -A x64 `
-        -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} `
+        -DCMAKE_BUILD_TYPE=Release `
         -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-        -DVCPKG_TARGET_TRIPLET=x64-windows
+        -DVCPKG_TARGET_TRIPLET=x64-windows `
         -DZeroMQ_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
-        -DZeroMQ_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/zmq.lib
-        -DSQLITE3_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
-        -DSQLITE3_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/sqlite3.lib `
+        -DZeroMQ_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/zmq.lib `
         -DGTEST_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
-        -DGTEST_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/gtest.lib
+        -DGTEST_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/gtest.lib `
+        -DSQLITE3_INCLUDE_DIRS=C:/vcpkg/installed/x64-windows/include `
+        -DSQLITE3_LIBRARIES=C:/vcpkg/installed/x64-windows/lib/sqlite3.lib
 
     - name: Build
       run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel
