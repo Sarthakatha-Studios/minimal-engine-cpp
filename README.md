@@ -13,7 +13,7 @@ Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS
 
 * [``raylib``](https://www.raylib.com/) for graphics rendering.
 * [``Open Dynamics Engine``](https://www.ode.org/) for physics.
-* [``assimp``](https://www.assimp.org/) for asset import from Blender.
+* [``assimp``](https://www.assimp.org/) for asset import from [Blender](https://www.blender.org/).
 * [``BehaviorTree.CPP``](https://www.behaviortree.dev/) for behavior tree logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
