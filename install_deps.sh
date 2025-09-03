@@ -3,7 +3,7 @@ set -e
 
 echo "=============================================="
 echo "   Installing dependencies for Bloodvalley    "
-echo "   (GLFW, ZeroMQ, SQLite3, GTest)             "
+echo "   (GLFW, GLUT, GTest)                        "
 echo "=============================================="
 echo ""
 
@@ -15,14 +15,13 @@ install_linux_debian() {
     # Update package list
     sudo apt update
     
-    # Install dependencies including OpenGL headers that GLFW might need
+    # Install dependencies including OpenGL headers that GLFW and GLUT need
     sudo apt install -y \
         build-essential \
         cmake \
         pkg-config \
         libglfw3-dev \
-        libzmq3-dev \
-        libsqlite3-dev \
+        freeglut3-dev \
         libgtest-dev \
         libgl1-mesa-dev \
         libglu1-mesa-dev
@@ -68,8 +67,7 @@ check_dependencies() {
     
     # Check for pkg-config files
     pkg-config --exists glfw3 || missing+=("GLFW")
-    pkg-config --exists libzmq || missing+=("ZeroMQ")
-    pkg-config --exists sqlite3 || missing+=("SQLite3")
+    pkg-config --exists glut || missing+=("GLUT")
     
     # Check for GTest
     if ! [ -f /usr/lib/libgtest.a ] && ! [ -f /usr/lib/x86_64-linux-gnu/libgtest.a ]; then
@@ -91,11 +89,11 @@ case "$OS" in
             check_dependencies
         elif [ -f /etc/redhat-release ]; then
             echo "Red Hat/Fedora detected. Install dependencies with:"
-            echo "  sudo dnf install glfw-devel zeromq-devel sqlite-devel gtest-devel"
+            echo "  sudo dnf install glfw-devel freeglut-devel gtest-devel"
             exit 1
         elif [ -f /etc/arch-release ]; then
             echo "Arch Linux detected. Install dependencies with:"
-            echo "  sudo pacman -S glfw zeromq sqlite gtest"
+            echo "  sudo pacman -S glfw freeglut gtest"
             exit 1
         else
             echo "Unsupported Linux distribution. Install deps manually."
@@ -104,7 +102,7 @@ case "$OS" in
         ;;
     Darwin*)
         echo "macOS detected. Install dependencies with Homebrew:"
-        echo "  brew install glfw zeromq sqlite googletest"
+        echo "  brew install glfw freeglut googletest"
         exit 1
         ;;
     *)
@@ -117,3 +115,4 @@ echo ""
 echo "=============================================="
 echo " All dependencies installed successfully!     "
 echo "=============================================="
+

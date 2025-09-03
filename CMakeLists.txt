@@ -37,11 +37,17 @@ else()
 endif()
 
 # --------------------------
-# 3. BehaviorTree.CPP
+# 3. Behavior-Tree
 # --------------------------
-set(BTCPP_BUILD_EXAMPLES OFF CACHE INTERNAL "")
-set(BTCPP_BUILD_TESTS OFF CACHE INTERNAL "")
-add_subdirectory(libs/BehaviorTree.CPP EXCLUDE_FROM_ALL)
+set(BTREE_BUILD_EXAMPLES OFF CACHE INTERNAL "")
+set(BTREE_BUILD_TESTS OFF CACHE INTERNAL "")
+add_subdirectory(libs/Behavior-Tree EXCLUDE_FROM_ALL)
+
+if (TARGET BehaviorTree)
+    set(BTREE_LIB BehaviorTree)
+else()
+    message(FATAL_ERROR "Could not find Behavior-Tree library target. Check Behavior-Tree's CMakeLists.")
+endif()
 
 # --------------------------
 # 4. Recast Navigation
@@ -66,7 +72,7 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/raylib/src
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/ode/include/ode
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/BehaviorTree.CPP/include/behaviortree_cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/Behavior-Tree/include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Recast/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Detour/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/assimp/include/assimp
@@ -75,7 +81,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     raylib
     ${ODE_LIB}
-    BT::behaviortree_cpp
+    ${BTREE_LIB}
     Recast
     Detour
     assimp
