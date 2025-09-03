@@ -1,0 +1,41 @@
+# Build directories
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# User-specific files
+*.user
+*.suo
+*.vcxproj.user
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*~
+*.swp
+*.tmp
+
+# Editor specific
+.idea/
+.vscode/
+
+# Compiled objects
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.exe
+
+# Logs
+*.log
+
+# Assimp or other libraries built in your project
+libs/*/build/
