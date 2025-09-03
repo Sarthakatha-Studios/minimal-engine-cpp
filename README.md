@@ -17,4 +17,4 @@ Use ``install_deps.sh`` in any Debian-based environment (Debian, Ubuntu, Pop!_OS
 * [``BehaviorTree.CPP``](https://www.behaviortree.dev/) for behavior tree logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
-Requires ``cmake>=3.16`` to build the project.
+Requires ``cmake>=3.16`` to build the project. The workflow has been tested on CMake version 3.22.1 successfully.
