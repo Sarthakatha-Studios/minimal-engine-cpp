@@ -14,7 +14,7 @@ env:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    name: Linux - gcc - Release
+    name: Linux - gcc - Release (Static)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,23 +45,32 @@ jobs:
             libxrandr-dev \
             libxi-dev \
             libgl1-mesa-dev \
-            libglu1-mesa-dev
+            libglu1-mesa-dev \
+            build-essential
 
       - name: Configure CMake
         run: |
           cmake -B build \
             -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} \
             -DCMAKE_C_COMPILER=${{ env.CC }} \
-            -DCMAKE_CXX_COMPILER=${{ env.CXX }}
+            -DCMAKE_CXX_COMPILER=${{ env.CXX }} \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DCMAKE_EXE_LINKER_FLAGS="-static -pthread -lm -ldl"
 
       - name: Build
         run: cmake --build build --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
+
+      - name: Copy assets
+        run: |
+          cp -r assets build/assets
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
           name: Minimal-Engine-CPP-linux
-          path: build/minimal-engine
+          path: |
+            build/minimal-engine
+            build/assets
           retention-days: 7
 
   build-windows-cross:
@@ -118,9 +127,15 @@ jobs:
       - name: Build Windows binaries
         run: cmake --build build-windows --config ${{ env.BUILD_TYPE }} --parallel $(nproc)
 
+      - name: Copy assets
+        run: |
+          cp -r assets build-windows/assets
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: Minimal-Engine-CPP-windows-x64
-          path: build-windows/minimal-engine.exe
+          path: |
+            build-windows/minimal-engine.exe
+            build-windows/assets
           retention-days: 7
