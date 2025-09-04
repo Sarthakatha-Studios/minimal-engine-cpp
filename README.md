@@ -22,6 +22,20 @@ sudo apt install -y \
 
 If you are on Windows/Mac/BSD or any other Linux flavour, install these dependencies manually.
 
+## Building the Project
+
+To build the project, run the following commands:
+
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+Use ``make clean`` and delete the ``build`` directory.
+
+**Note.** The project requires ``cmake>=3.16`` to build. CMake version 3.22.1 is known to work successfully with ``g++`` (not ``clang``) as the C++ compiler.
+
 ## Libraries Used
 
 * [``raylib``](https://www.raylib.com/) for graphics rendering.
@@ -31,7 +45,5 @@ If you are on Windows/Mac/BSD or any other Linux flavour, install these dependen
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
 **To-Do.** Add libraries for binaural and spatial-aware audio, and networking.
-
-Requires ``cmake>=3.16`` to build the project. It has been tested on CMake version 3.22.1 successfully. We used ``g++`` (not ``clang``) as our C++ compiler.
 
 **Note.** A GitHub Actions workflow has been set up to compile binaries for Linux and Windows (both on Ubuntu 24.04LTS, uses ``mingw-w64`` for Windows compilation).
