@@ -1,6 +1,6 @@
 # A Minimal Game Engine in C++20
 
-This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396). For the Windows build, you need to ship your ``assets`` directory along with the builds. For Linux, packaging as an AppImage takes care of this.
+This is a template repository, and can be forked to build custom games in ``raylib`` without any dependency hell or compilation headaches. The sample icon has been sourced from [Hieroglyphs by Ahmad Najiullah](https://icon-icons.com/pack/Hieroglyphs/2396). The sample asset has been sourced from [Remington 870 by nghiakua06](https://sketchfab.com/3d-models/remington-870-7a590a1235fa4ffe85079d3e19dc220f). For the Windows build, you need to ship your ``assets`` directory along with the builds. For Linux, packaging as an AppImage takes care of this.
 
 ## External Dependencies
 
@@ -44,6 +44,6 @@ Delete the ``build`` directory to clean the build.
 * [``AI Toolkit``](https://github.com/linkdd/aitoolkit/tree/main) for AI behavior tree and finite state machine logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
-**To-Do.** Add libraries for networking.
+**To-Do.** Add libraries for networking. Add asset compression, encryption/decryption, loading into memory as raw bytes.
 
 **Note.** A GitHub Actions workflow has been set up to compile binaries for Linux and Windows (both on Ubuntu 24.04LTS, uses ``mingw-w64`` for Windows compilation).
