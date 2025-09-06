@@ -44,6 +44,6 @@ Delete the ``build`` directory to clean the build.
 * [``AI Toolkit``](https://github.com/linkdd/aitoolkit/tree/main) for AI behavior tree and finite state machine logic.
 * [``Recast Navigation``](https://recastnav.com/) for AI pathfinding.
 
-**To-Do.** Add libraries for networking. Add asset compression, encryption/decryption, loading into memory as raw bytes.
+**To-Do.** Add libraries for networking. Add asset compression, encryption/decryption, loading into memory as raw bytes. Add Python scripting capabilities.
 
 **Note.** A GitHub Actions workflow has been set up to compile binaries for Linux and Windows (both on Ubuntu 24.04LTS, uses ``mingw-w64`` for Windows compilation).
