@@ -56,6 +56,10 @@ set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT ON CACHE INTERNAL "")
 add_subdirectory(libs/assimp EXCLUDE_FROM_ALL)
 
 # --------------------------
+# 6. EnTT (header-only)
+# --------------------------
+
+# --------------------------
 # 6. Main executable
 # --------------------------
 add_executable(${PROJECT_NAME} src/main.cpp)
@@ -67,6 +71,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Recast/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Detour/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/assimp/include/assimp
+    ${CMAKE_CURRENT_SOURCE_DIR}/libs/entt/src/entt
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

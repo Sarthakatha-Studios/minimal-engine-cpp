@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "entt.hpp"
 #include "ode.h"
 #include "behtree.hpp"
 #include "Recast.h"
