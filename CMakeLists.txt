@@ -60,7 +60,70 @@ add_subdirectory(libs/assimp EXCLUDE_FROM_ALL)
 # --------------------------
 
 # --------------------------
-# 6. Main executable
+# 7. SoLoud (auto backend)
+# --------------------------
+set(SOLOUD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/soloud)
+
+file(GLOB SOLOUND_CORE
+    ${SOLOUD_DIR}/src/core/*.cpp
+)
+
+# Auto-detect backend
+if(EXISTS ${SOLOUD_DIR}/src/backend/miniaudio/soloud_miniaudio.cpp)
+    set(SOLOUD_BACKEND_SRC ${SOLOUD_DIR}/src/backend/miniaudio/soloud_miniaudio.cpp)
+    set(SOLOUD_BACKEND_DEF WITH_MINIAUDIO)
+    message(STATUS "SoLoud: Using miniaudio backend")
+elseif(EXISTS ${SOLOUD_DIR}/src/backend/sdl2/soloud_sdl2.cpp)
+    set(SOLOUD_BACKEND_SRC ${SOLOUD_DIR}/src/backend/sdl2/soloud_sdl2.cpp)
+    set(SOLOUD_BACKEND_DEF WITH_SDL2)
+    message(STATUS "SoLoud: Using SDL2 backend")
+elseif(EXISTS ${SOLOUD_DIR}/src/backend/portaudio/soloud_portaudio.cpp)
+    set(SOLOUD_BACKEND_SRC ${SOLOUD_DIR}/src/backend/portaudio/soloud_portaudio.cpp)
+    set(SOLOUD_BACKEND_DEF WITH_PORTAUDIO)
+    message(STATUS "SoLoud: Using PortAudio backend")
+else()
+    message(FATAL_ERROR "No suitable SoLoud backend found!")
+endif()
+
+# Choose basic decoders (WAV only for now; add OGG/MP3 later if needed)
+set(SOLOUD_DECODERS
+    ${SOLOUD_DIR}/src/audiosource/wav/soloud_wav.cpp
+    ${SOLOUD_DIR}/src/audiosource/wav/soloud_wavstream.cpp
+)
+
+add_library(soloud STATIC
+    ${SOLOUND_CORE}
+    ${SOLOUD_BACKEND_SRC}
+    ${SOLOUD_DECODERS}
+)
+
+target_include_directories(soloud PUBLIC
+    ${SOLOUD_DIR}/include
+    ${SOLOUD_DIR}/src
+)
+
+# Define backend macro so soloud.cpp doesn't complain
+target_compile_definitions(soloud PUBLIC ${SOLOUD_BACKEND_DEF})
+
+# SDL2 backend requires linking SDL2
+if(SOLOUD_BACKEND_DEF STREQUAL "WITH_SDL2")
+    find_package(SDL2 REQUIRED)
+    target_link_libraries(soloud PRIVATE SDL2::SDL2)
+endif()
+
+# PortAudio backend requires linking PortAudio
+if(SOLOUD_BACKEND_DEF STREQUAL "WITH_PORTAUDIO")
+    find_package(PortAudio REQUIRED)
+    target_link_libraries(soloud PRIVATE PortAudio::PortAudio)
+endif()
+
+# Linux-specific pthread and dl flags
+if(UNIX AND NOT APPLE)
+    target_link_libraries(soloud PRIVATE pthread dl)
+endif()
+
+# --------------------------
+# 8. Main executable
 # --------------------------
 add_executable(${PROJECT_NAME} src/main.cpp)
 
@@ -72,6 +135,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/recastnavigation/Detour/Include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/assimp/include/assimp
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/entt/src/entt
+    ${SOLOUD_DIR}/include
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -80,17 +144,18 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Recast
     Detour
     assimp
+    soloud
 )
 
 # --------------------------
-# 6b. Set Windows executable icon
+# 8b. Set Windows executable icon
 # --------------------------
 if(WIN32)
     target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/sample.ico.rc")
 endif()
 
 # --------------------------
-# 7. Platform-specific linking
+# 9. Platform-specific linking
 # --------------------------
 if(APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
