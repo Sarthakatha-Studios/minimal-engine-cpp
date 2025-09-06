@@ -39,6 +39,7 @@ Use ``make clean`` and delete the ``build`` directory.
 ## Libraries Used
 
 * [``raylib``](https://www.raylib.com/) for graphics rendering.
+* [``EnTT``](https://github.com/skypjack/entt) for ECS.
 * [``Open Dynamics Engine``](https://www.ode.org/) for physics.
 * [``assimp``](https://www.assimp.org/) for asset import from [Blender](https://www.blender.org/).
 * [``AI Toolkit``](https://github.com/linkdd/aitoolkit/tree/main) for AI behavior tree and finite state machine logic.
