@@ -32,7 +32,7 @@ cmake --build build
 ```
 Delete the ``build`` directory to clean the build.
 
-**Note.** The project requires ``cmake>=3.16`` to build. CMake version 3.22.1 is known to work successfully with ``g++`` (not ``clang``) as the C++ compiler.
+**Note.** The project requires ``cmake>=3.16`` to build. CMake version 3.22.1 is known to work successfully, with ``g++`` as the C++20 compiler.
 
 ## Libraries Used
 
